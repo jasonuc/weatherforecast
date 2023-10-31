@@ -12,6 +12,7 @@ export default {
       },
       backgroundImage: {
         'cloud-1': 'url("/clouds-moving.gif")',
+        'cloud-2': 'url("/cloud-2.jpg")',
       },
       colors: {
         'coral': "#FF6F61"

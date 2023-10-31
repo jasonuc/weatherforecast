@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
-
-function NavBar({ location, setLocation }) {
+function SearchBar({ location, setLocation }) {
     const placeholderValues = ["Lagos, Nigeria", "New York, USA", "Tokyo, Japan", "London, UK", "Paris, France", "Beijing, China", "Sydney, Australia", "Rio de Janeiro, Brazil", "Moscow, Russia", "Cairo, Egypt", "Mumbai, India"];
     const randomPlaceholder = () => placeholderValues[Math.floor(Math.random() * placeholderValues.length)]
     const [placeholder, setPlaceholder] = useState(randomPlaceholder())
@@ -21,15 +20,19 @@ function NavBar({ location, setLocation }) {
         console.log("Location is now: " + location)
     }
 
+    function handleClick() {
+        setLocation("")
+    }
+
     return (
-        <div className={`h-14 md:h-20 items-center w-screen flex justify-evenly md:justify-center py-2 border-b-2 border-coral border-opacity-10 border-dotted gap-x-2 box-border ${location ? 'flex-row-reverse' : 'flex-row'}`}>
-            <button className={`bg-coral text-white h-8 min-w-[5rem] px-4 rounded-md shadow-md hover:shadow-sm text-xs font-bold md:text-base md:font-normal ${location ? "flex-row-reverse" : "flex-row"}`}>
+        <div className={`h-14 md:h-20 items-center w-screen flex justify-evenly md:justify-center py-2 border-b-4 border-t-4 border-coral border-opacity-10 border-dotted gap-x-2 lg:gap-x-6 box-border ${location ? 'flex-row-reverse' : 'flex-row'}`}>
+            <button onClick={handleClick} className={`bg-coral text-white h-8 min-w-[5rem] px-4 rounded-full shadow-md hover:shadow-sm text-xs font-bold md:text-base md:font-normal ${location ? "flex-row-reverse" : "flex-row"}`}>
                 {location ? "Search" : "My location"}
             </button>
-            <input onChange={handleChange} type="text" className=" placeholder:italic border-dotted focus:border-solid box-border border-2 h-8 px-2 md:flex-grow max-w-lg rounded-md font-mono placeholder:text-slate-300" placeholder={placeholder} value={location} />
+            <input onChange={handleChange} type="text" className=" shadow-md md:shadow-sm shadow-coral placeholder:italic border-dotted focus:border-solid box-border border-2 h-8 px-2 md:flex-grow min-w-[18rem] md:max-w-lg rounded-md font-mono placeholder:text-slate-300" placeholder={placeholder} value={location} />
         </div>
     )
 
 }
 
-export default NavBar;
+export default SearchBar;
