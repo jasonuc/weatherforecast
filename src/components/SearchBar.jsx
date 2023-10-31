@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { getCurrentCity } from "../services/getCurrentCity";
 
-function SearchBar({ location, setLocation }) {
+
+function SearchBar({ location, setLocation, setForecast }) {
     const placeholderValues = ["Lagos, Nigeria", "New York, USA", "Tokyo, Japan", "London, UK", "Paris, France", "Beijing, China", "Sydney, Australia", "Rio de Janeiro, Brazil", "Moscow, Russia", "Cairo, Egypt", "Mumbai, India"];
     const randomPlaceholder = () => placeholderValues[Math.floor(Math.random() * placeholderValues.length)]
     const [placeholder, setPlaceholder] = useState(randomPlaceholder())
@@ -20,8 +22,23 @@ function SearchBar({ location, setLocation }) {
         console.log("Location is now: " + location)
     }
 
-    function handleClick() {
-        setLocation("")
+    async function handleClick() {
+        try {
+            const city = await getCurrentCity()
+            console.log("THIS USER IS IN: " + city);
+            setLocation(city)
+
+            setForecast(prev => {
+                return {
+                    ...prev,
+                    city: city
+                }
+            })
+            
+
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     return (
@@ -29,7 +46,7 @@ function SearchBar({ location, setLocation }) {
             <button onClick={handleClick} className={`bg-coral text-white h-8 min-w-[5rem] px-4 rounded-full shadow-md hover:shadow-sm text-xs font-bold md:text-base md:font-normal ${location ? "flex-row-reverse" : "flex-row"}`}>
                 {location ? "Search" : "My location"}
             </button>
-            <input onChange={handleChange} type="text" className=" shadow-md md:shadow-sm shadow-coral placeholder:italic border-dotted focus:border-solid box-border border-2 h-8 px-2 md:flex-grow min-w-[18rem] md:max-w-lg rounded-md font-mono placeholder:text-slate-300" placeholder={placeholder} value={location} />
+            <input onChange={handleChange} type="text" className=" shadow-md shadow-coral md:shadow-md md:shadow-gray-400 placeholder:italic border-dotted focus:border-solid box-border border-2 h-8 px-2 md:flex-grow min-w-[18rem] md:max-w-lg rounded-md font-mono placeholder:text-slate-300" placeholder={placeholder} value={location} />
         </div>
     )
 
