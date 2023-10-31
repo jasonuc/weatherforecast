@@ -20,6 +20,7 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
     }
 
     function handleClick() {
+        console.log("Location submitted is: " + location)
         setLocation("")
     }
 
