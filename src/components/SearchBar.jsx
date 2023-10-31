@@ -55,7 +55,8 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
         
         // Make API call to OpenWeatherMap
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`)
+        // fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`)
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=8b825d527f21884aef1062ed6543470a&units=metric`)
             .then(response => response.json())
             .then(data => {
                 setWeather(data);
