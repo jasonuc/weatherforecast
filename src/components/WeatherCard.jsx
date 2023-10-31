@@ -1,9 +1,11 @@
 
-function WeatherCard({city}) {
+function WeatherCard({ city }) {
 
     function flipACoin() {
         return Math.floor(Math.random() * 2)
     }
+    
+    // This is just an example of how the adpp should look like
 
     return (
         <div className=" flex flex-col w-3/4 lg:w-7/12 border-solid border-2 h-[32rem] md:h-[40rem] rounded-md shadow-xl shadow-coral">
