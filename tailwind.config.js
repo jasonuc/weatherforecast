@@ -11,7 +11,7 @@ export default {
         "Kanit": ["Kanit", "ui-sans"]
       },
       backgroundImage: {
-        'cloud-1': 'url("./clouds-moving.gif")',
+        'cloud-1': 'url("./public/clouds-moving.gif")',
       },
       colors: {
         'coral': "#FF6F61"
