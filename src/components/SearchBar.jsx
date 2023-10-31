@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+const apiKey = process.env.API_KEY;
 
 function SearchBar({ location, setLocation, weather, setWeather }) {
     const placeholderValues = ["Lagos, Nigeria", "New York, USA", "Tokyo, Japan", "London, UK", "Paris, France", "Beijing, China", "Sydney, Australia", "Rio de Janeiro, Brazil", "Moscow, Russia", "Cairo, Egypt", "Mumbai, India"]
@@ -52,7 +53,7 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
         const formattedLocation = `${latitude},${longitude}`; // Format as needed
         setLocation(formattedLocation);
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-        const apiKey = process.env.API_KEY;
+        
         // Make API call to OpenWeatherMap
         fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`)
             .then(response => response.json())
