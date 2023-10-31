@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 // import { getCurrentCity } from "../services/getCurrentCity";
 
 
-function SearchBar({ location, setLocation, setWeather }) {
+function SearchBar({ location, setLocation, weather, setWeather }) {
     const placeholderValues = ["Lagos, Nigeria", "New York, USA", "Tokyo, Japan", "London, UK", "Paris, France", "Beijing, China", "Sydney, Australia", "Rio de Janeiro, Brazil", "Moscow, Russia", "Cairo, Egypt", "Mumbai, India"];
     const randomPlaceholder = () => placeholderValues[Math.floor(Math.random() * placeholderValues.length)]
     const [placeholder, setPlaceholder] = useState(randomPlaceholder())
@@ -36,15 +36,16 @@ function SearchBar({ location, setLocation, setWeather }) {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         const appID = "8b825d527f21884aef1062ed6543470a"
-        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+        // console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
         // Make API call to OpenWeatherMap
         fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${appID}&units=metric`)
             .then(response => response.json())
             .then(data => {
                 setWeather(data);
-                setLocation(data.name);
+                console.log(weather)
                 console.log(data);
+                setLocation(data.name);
                 
             })
             .catch(error => console.log(error));
