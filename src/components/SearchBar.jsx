@@ -1,7 +1,10 @@
-const apiKey = import.meta.env.VITE_VERCEL_WEATHER_APP_SECURITY_KEY;
+/* eslint-disable react/prop-types */
+
+const weatherApiKey = import.meta.env.VITE_VERCEL_WEATHER_APP_SECURITY_KEY;
+const unsplashApiKey = import.meta.env.VITE_VERCEL_UNSPLASH_API_KEY;
 import { useState, useEffect } from "react";
 
-function SearchBar({ location, setLocation, weather, setWeather }) {
+function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
     const placeholderValues = ["Lagos, Nigeria", "New York, USA", "Tokyo, Japan", "London, UK", "Paris, France", "Beijing, China", "Sydney, Australia", "Rio de Janeiro, Brazil", "Moscow, Russia", "Cairo, Egypt", "Mumbai, India"]
     const randomPlaceholder = () => placeholderValues[Math.floor(Math.random() * placeholderValues.length)];
     const [placeholder, setPlaceholder] = useState(randomPlaceholder());
@@ -25,6 +28,7 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
     function handleChange(event) {
         setLocation(event.target.value);
     }
+
     function handleClick() {
         if (!location) {
             // If location is empty, use geolocation
@@ -34,9 +38,9 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
                 console.log("Geolocation not supported");
             }
         } else {
-            // If location is not empty, use the provided location value
+            // If location is not empty, use the provided location value...
             // Make API call to OpenWeatherMap with the user's input
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${weatherApiKey}&units=metric`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Invalid input");
@@ -46,6 +50,17 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
                 .then(data => {
                     setWeather(data);
                     console.log(weather);
+
+                    // Fetch a random image from Unsplash based on the location
+                    fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(location)}&client_id=${unsplashApiKey}`)
+                        .then(response => response.json())
+                        .then(unsplashData => {
+                            if (unsplashData.urls && unsplashData.urls.regular) {
+                                setImgSrc(unsplashData.urls.regular); // Set the image source based on Unsplash response
+                            }
+                        })
+                        .catch(error => console.error("Error fetching Unsplash image:", error));
+
                     setPlaceholder(randomPlaceholder()); // Reset placeholder on successful response
                 })
                 .catch(error => {
@@ -56,6 +71,7 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
         }
     }
 
+
     function success(position) {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
@@ -63,7 +79,7 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
         setLocation(formattedLocation);
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`)
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${weatherApiKey}&units=metric`)
             .then(response => response.json())
             .then(data => {
                 setWeather(data);
