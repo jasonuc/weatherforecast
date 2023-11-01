@@ -1,4 +1,4 @@
-const apiKey = import.meta.env.VITE_WEATHER_APP_SECURITY_KEY;
+const apiKey = import.meta.env.VITE_VERCEL_WEATHER_APP_SECURITY_KEY;
 import { useState, useEffect } from "react";
 
 function SearchBar({ location, setLocation, weather, setWeather }) {
