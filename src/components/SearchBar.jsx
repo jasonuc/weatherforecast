@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-const apiKey = process.env.API_KEY;
+const apiKey = process.env.WEATHER_APP_SECURITY_KEY;
 
 function SearchBar({ location, setLocation, weather, setWeather }) {
     const placeholderValues = ["Lagos, Nigeria", "New York, USA", "Tokyo, Japan", "London, UK", "Paris, France", "Beijing, China", "Sydney, Australia", "Rio de Janeiro, Brazil", "Moscow, Russia", "Cairo, Egypt", "Mumbai, India"]
