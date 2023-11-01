@@ -1,4 +1,4 @@
-import React from "react";
+
 
 function WeatherCard(props) {
     // Destructuring the weather object to extract required data
