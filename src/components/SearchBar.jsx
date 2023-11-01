@@ -9,7 +9,7 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
     useEffect(() => {
         const intervalId = setInterval(() => {
             setPlaceholder(randomPlaceholder());
-        }, 1500);
+        }, 2500);
 
         return () => {
             clearInterval(intervalId); 
@@ -34,11 +34,20 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
             } else {
                 console.log("Geolocation not supported");
             }
-        } else {
+        } else if (location) {
             // If location is not empty, use the provided location value
             // Make API call to OpenWeatherMap with the user's input
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=&units=metric`)
-                .then(response => response.json())
+
+            // fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=8b825d527f21884aef1062ed6543470a&units=metric`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric`)
+            .then(response => {
+                if (!response.ok) {
+                    setLocation("")
+                    setPlaceholder("Invalid Input!")
+                    throw new Error("Invalid location entered");
+                }
+                response.json()
+            })
                 .then(data => {
                     setWeather(data);
                     console.log(weather);
