@@ -12,7 +12,7 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
         }, 1500);
 
         return () => {
-            clearInterval(intervalId); 
+            clearInterval(intervalId);
         };
     }, []);
 
@@ -25,7 +25,6 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
     function handleChange(event) {
         setLocation(event.target.value);
     }
-
     function handleClick() {
         if (!location) {
             // If location is empty, use geolocation
@@ -34,16 +33,26 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
             } else {
                 console.log("Geolocation not supported");
             }
-        } else if (location) {
+        } else {
             // If location is not empty, use the provided location value
             // Make API call to OpenWeatherMap with the user's input
             fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric`)
-            .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Invalid input");
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     setWeather(data);
                     console.log(weather);
+                    setPlaceholder(randomPlaceholder()); // Reset placeholder on successful response
                 })
-                .catch(error => console.log(error));
+                .catch(error => {
+                    console.error(error);
+                    setLocation(""); // Clear the input field on error
+                    setPlaceholder("Invalid input"); // Set placeholder to "Invalid input"
+                });
         }
     }
 
@@ -53,7 +62,7 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
         const formattedLocation = `${latitude},${longitude}`; // Format as needed
         setLocation(formattedLocation);
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-        
+
         fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`)
             .then(response => response.json())
             .then(data => {
