@@ -2,15 +2,13 @@ import React from "react";
 
 function WeatherCard(props) {
     // Destructuring the weather object to extract required data
-    const { name, main, weather: weatherDescription, sys, wind } = props.weather;
+    const { name, main, weather: weatherDescription, sys } = props.weather;
     const temperature = main.temp;
     const feelsLike = main.feels_like;
     const tempMax = main.temp_max;
     const tempMin = main.temp_min;
     const countryName = sys.country;
     const humidity = main.humidity;
-    const windDeg = wind.deg;
-    const windSpeed = wind.speed;
     const weatherTitle = weatherDescription[0].main
     const description = weatherDescription.length > 0 ? weatherDescription[0].description : "";
 
@@ -43,12 +41,6 @@ function WeatherCard(props) {
                 </p>
                 <p className="font-bold md:text-2xl">
                     Humidity: <span className="font-normal italic">{humidity}%</span>
-                </p>
-                <p className="font-bold md:text-2xl">
-                    Wind Direction: <span className="font-normal italic">{windDeg}°C</span>
-                </p>
-                <p className="font-bold md:text-2xl">
-                    Wind Direction: <span className="font-normal italic">{windSpeed}m/s</span>
                 </p>
             </div>
         </div>
