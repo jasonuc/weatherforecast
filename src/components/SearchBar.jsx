@@ -37,12 +37,12 @@ function SearchBar({ location, setLocation, weather, setWeather }) {
         } else if (location) {
             // If location is not empty, use the provided location value
             // Make API call to OpenWeatherMap with the user's input
-            // fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric`)
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=8b825d527f21884aef1062ed6543470a&units=metric`)
+            // fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=8b825d527f21884aef1062ed6543470a&units=metric`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric`)
             .then(response => {
                 if (!response.ok) {
-                    setLocation("")
-                    setPlaceholder("Invalid Input!")
+                    // setLocation("")
+                    // setPlaceholder("Invalid Input!")
                     throw new Error("Invalid location entered");
                 }
                 response.json()
