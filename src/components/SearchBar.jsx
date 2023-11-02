@@ -90,7 +90,7 @@ function SearchBar({ location, setLocation, setWeather, setImgSrc }) {
             <button onClick={handleClick} className={`bg-coral text-white h-8 min-w-[5rem] px-4 rounded-full shadow-md hover:shadow-sm text-xs font-bold md:text-base md:font-normal ${location ? "flex-row-reverse" : "flex-row"}`}>
                 {location ? "Search" : "My location"}
             </button>
-            <input onChange={handleChange} type="text" name="user-input" className=" shadow-md shadow-coral md:shadow-md md:shadow-gray-400 placeholder:italic border-dotted focus:border-solid box-border border-2 h-8 px-2 md:flex-grow min-w-[18rem] md:max-w-lg rounded-md font-mono placeholder:text-slate-300" placeholder={placeholder} value={location} />
+            <input onChange={handleChange} type="text" name="user-input" className=" shadow-md shadow-coral md:shadow-lg md:shadow-gray-400 placeholder:italic border-dotted focus:border-solid box-border border-2 h-8 px-2 md:flex-grow min-w-[18rem] md:max-w-lg rounded-md font-mono placeholder:text-slate-300" placeholder={placeholder} value={location} />
         </div>
     );
 }

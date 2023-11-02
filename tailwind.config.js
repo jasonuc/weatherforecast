@@ -15,7 +15,8 @@ export default {
         'cloud-2': 'url("/cloud-2.jpg")',
       },
       colors: {
-        'coral': "#FF6F61"
+        'coral': "#FF6F61",
+        'skyblue': "#e1e6ee"
       }
     },
   },
