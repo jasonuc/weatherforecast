@@ -16,7 +16,7 @@ function WeatherCard(props) {
         <div className="flex flex-col w-3/4 lg:w-7/12 border-solid border-2 h-[32rem] md:h-[40rem] rounded-md shadow-xl shadow-coral">
             <img
                 // src="https://a.cdn-hotels.com/gdcs/production142/d1399/f8f4ac45-1083-49d2-8cfa-1bf5939bc3ac.jpg"
-                src={props.imgSrc}
+                src={props.imgSrc ? props.imgSrc : "../src/assets/NoImageAvailable.png"}
                 alt="Location Image"
                 className="h-[12rem] lg:h-[50%] w-[100%] rounded-tl-md rounded-tr-md border-b-2 border-opacity-30 border-dotted border-coral"
             />

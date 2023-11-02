@@ -2,6 +2,7 @@
 
 const weatherApiKey = import.meta.env.VITE_VERCEL_WEATHER_APP_SECURITY_KEY;
 const unsplashApiKey = import.meta.env.VITE_VERCEL_UNSPLASH_API_KEY;
+
 import { useState, useEffect } from "react";
 
 function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
@@ -19,12 +20,6 @@ function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
         };
     }, []);
 
-    useEffect(() => {
-        if (weather) {
-            console.log("Weather data updated:", weather);
-        }
-    }, [weather]);
-
     function handleChange(event) {
         setLocation(event.target.value);
     }
@@ -33,13 +28,12 @@ function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
         if (!location) {
             // If location is empty, use geolocation
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(success, error);
+                navigator.geolocation.getCurrentPosition(success, error, { enableHighAccuracy: true });
             } else {
                 console.log("Geolocation not supported");
             }
         } else {
-            // If location is not empty, use the provided location value...
-            // Make API call to OpenWeatherMap with the user's input
+            // If location is not empty, use the provided location value to make an API call to OpenWeatherMap with the user's input
             fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${weatherApiKey}&units=metric`)
                 .then(response => {
                     if (!response.ok) {
@@ -49,9 +43,7 @@ function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
                 })
                 .then(data => {
                     setWeather(data);
-                    console.log(weather);
-
-                    // Fetch a random image from Unsplash based on the location
+                    // Fetches an image from Unsplash based on the location given by the user
                     fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(location)}&client_id=${unsplashApiKey}`)
                         .then(response => response.json())
                         .then(unsplashData => {
@@ -59,31 +51,25 @@ function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
                                 setImgSrc(unsplashData.urls.regular); // Set the image source based on Unsplash response
                             }
                         })
-                        .catch(error => console.error("Error fetching Unsplash image:", error));
-
-                    setPlaceholder(randomPlaceholder()); // Reset placeholder on successful response
+                        .catch(error => console.error("Error fetching Unsplash image: ", error));
                 })
                 .catch(error => {
                     console.error(error);
                     setLocation(""); // Clear the input field on error
-                    setPlaceholder("Invalid input"); // Set placeholder to "Invalid input"
+                    setPlaceholder("Invalid input");
                 });
         }
     }
 
-
     function success(position) {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-        const formattedLocation = `${latitude},${longitude}`; // Format as needed
-        setLocation(formattedLocation);
-        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
         fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${weatherApiKey}&units=metric`)
             .then(response => response.json())
             .then(data => {
                 setWeather(data);
-                console.log(weather);
+                setLocation(data.name)
             })
             .catch(error => console.log(error));
     }
@@ -97,7 +83,7 @@ function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
             <button onClick={handleClick} className={`bg-coral text-white h-8 min-w-[5rem] px-4 rounded-full shadow-md hover:shadow-sm text-xs font-bold md:text-base md:font-normal ${location ? "flex-row-reverse" : "flex-row"}`}>
                 {location ? "Search" : "My location"}
             </button>
-            <input onChange={handleChange} type="text" className=" shadow-md shadow-coral md:shadow-md md:shadow-gray-400 placeholder:italic border-dotted focus:border-solid box-border border-2 h-8 px-2 md:flex-grow min-w-[18rem] md:max-w-lg rounded-md font-mono placeholder:text-slate-300" placeholder={placeholder} value={location} />
+            <input onChange={handleChange} type="text" name="user-input" className=" shadow-md shadow-coral md:shadow-md md:shadow-gray-400 placeholder:italic border-dotted focus:border-solid box-border border-2 h-8 px-2 md:flex-grow min-w-[18rem] md:max-w-lg rounded-md font-mono placeholder:text-slate-300" placeholder={placeholder} value={location} />
         </div>
     );
 }
