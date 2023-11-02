@@ -19,7 +19,7 @@ function Header() {
                   return "Weatherooo"
               }
             })
-      }, 500
+      }, 1500
     )
       
     return () => {
