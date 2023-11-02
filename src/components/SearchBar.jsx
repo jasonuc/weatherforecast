@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 
 const weatherApiKey = import.meta.env.VITE_VERCEL_WEATHER_APP_SECURITY_KEY;
 const unsplashApiKey = import.meta.env.VITE_VERCEL_UNSPLASH_API_KEY;
 
-import { useState, useEffect } from "react";
 
 function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
-    const placeholderValues = ["Lagos", "New York", "Tokyo", "London", "Paris", "Beijing", "Sydney", "Rio de Janeiro", "Moscow", "Cairo", "Mumbai"]
+    const placeholderValues = ["Lagos, NG", "New York, US", "Tokyo", "London", "Paris", "Beijing", "Sydney, AU", "Rio de Janeiro", "Moscow", "Cairo, EG", "Mumbai"]
     const randomPlaceholder = () => placeholderValues[Math.floor(Math.random() * placeholderValues.length)];
     const [placeholder, setPlaceholder] = useState(randomPlaceholder());
 
@@ -26,57 +26,48 @@ function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
 
     function handleClick() {
         if (!location) {
-            // If location is empty, use geolocation
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(success, error, { enableHighAccuracy: true });
+                navigator.geolocation.getCurrentPosition(success, error, { enableHighAccuracy: true })
             } else {
-                console.log("Geolocation not supported");
+                alert("Geolocation is not supported on this browser.\nYou have to put your location in the search bar.")
+                console.error("Geolocation is not supported on this browser.\nYou have to put your location in the search bar.")
             }
         } else {
-            // If location is not empty, use the provided location value to make an API call to OpenWeatherMap with the user's input
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${weatherApiKey}&units=metric`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Invalid input");
-                    }
-                    return response.json();
-                })
+            const locationArr = location.includes(",") ? location.split(",") : false
+            const cityName = locationArr? locationArr[0].trim() : location;
+            const countryCode = locationArr ? locationArr[1].trim() : null;
+            fetch(locationArr ? `https://api.openweathermap.org/data/2.5/weather?q=${cityName},${countryCode}&appid=${weatherApiKey}&units=metric` : `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${weatherApiKey}&units=metric`)
+                .then(response => response.json())
                 .then(data => {
-                    setWeather(data);
-                    // Fetches an image from Unsplash based on the location given by the user
-                    fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(location)}&client_id=${unsplashApiKey}`)
+                    setWeather(data)
+                    fetch(`https://api.unsplash.com/search/photos?query=${data.name}&client_id=${unsplashApiKey}`)
                         .then(response => response.json())
-                        .then(unsplashData => {
-                            if (unsplashData.urls && unsplashData.urls.regular) {
-                                setImgSrc(unsplashData.urls.regular); // Set the image source based on Unsplash response
-                            }
-                        })
-                        .catch(error => console.error("Error fetching Unsplash image: ", error));
+                        .then(unsplashData => {setImgSrc(unsplashData.results[0].urls ? unsplashData.results[0].urls.regular : false)})
                 })
-                .catch(error => {
-                    console.error(error);
-                    setLocation(""); // Clear the input field on error
-                    setPlaceholder("Invalid input");
-                });
         }
     }
 
     function success(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-
+        const { coords } = position
+        const { latitude, longitude } = coords
+        const currentPos = `${latitude}, ${longitude}`
+        console.log(`Current position: ${currentPos}`)
         fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${weatherApiKey}&units=metric`)
             .then(response => response.json())
             .then(data => {
-                setWeather(data);
-                setLocation(data.name)
+                setWeather(data)
+                console.log(data.name)
+                fetch(`https://api.unsplash.com/search/photos?query=${data.name}&client_id=${unsplashApiKey}`)
+                    .then(response => response.json())
+                    .then(unsplashData => { console.log(unsplashData); setImgSrc(unsplashData.results[0].urls.regular) })
             })
-            .catch(error => console.log(error));
     }
 
-    function error() {
-        console.log("Unable to retrieve your location");
+    function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`)
     }
+
+
 
     return (
         <div className={`h-14 md:h-20 items-center w-screen flex justify-evenly md:justify-center py-2 border-b-4 border-t-4 border-coral border-opacity-10 border-dotted gap-x-2 lg:gap-x-6 box-border ${location ? 'flex-row-reverse' : 'flex-row'}`}>
