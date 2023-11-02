@@ -5,7 +5,7 @@ const weatherApiKey = import.meta.env.VITE_VERCEL_WEATHER_APP_SECURITY_KEY;
 const unsplashApiKey = import.meta.env.VITE_VERCEL_UNSPLASH_API_KEY;
 
 
-function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
+function SearchBar({ location, setLocation, setWeather, setImgSrc }) {
     const placeholderValues = ["Lagos, NG", "New York, US", "Tokyo", "London", "Paris", "Beijing", "Sydney, AU", "Rio de Janeiro", "Moscow", "Cairo, EG", "Mumbai"]
     const randomPlaceholder = () => placeholderValues[Math.floor(Math.random() * placeholderValues.length)];
     const [placeholder, setPlaceholder] = useState(randomPlaceholder());
@@ -34,15 +34,33 @@ function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
             }
         } else {
             const locationArr = location.includes(",") ? location.split(",") : false
-            const cityName = locationArr? locationArr[0].trim() : location;
+            const cityName = locationArr ? locationArr[0].trim() : location;
             const countryCode = locationArr ? locationArr[1].trim() : null;
             fetch(locationArr ? `https://api.openweathermap.org/data/2.5/weather?q=${cityName},${countryCode}&appid=${weatherApiKey}&units=metric` : `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${weatherApiKey}&units=metric`)
-                .then(response => response.json())
+                .then(response => {
+                    try {
+                        if (response.ok) {
+                            return response.json()
+                        } else {
+                            setLocation("")
+                            setPlaceholder("Invalid Input!")
+                            throw new Error("Invalid Input")
+                        }
+                    } catch (err) {
+                        console.log(err.message)
+                    }
+                })
                 .then(data => {
                     setWeather(data)
                     fetch(`https://api.unsplash.com/search/photos?query=${data.name}&client_id=${unsplashApiKey}`)
-                        .then(response => response.json())
-                        .then(unsplashData => {setImgSrc(unsplashData.results[0].urls ? unsplashData.results[0].urls.regular : false)})
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json()
+                            } else {
+                                throw new Error("Image Not Found")
+                            }
+                        })
+                        .then(unsplashData => { setImgSrc(unsplashData.results[0].urls ? unsplashData.results[0].urls.regular : false) })
                 })
         }
     }
@@ -66,8 +84,6 @@ function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
     function error(err) {
         console.warn(`ERROR(${err.code}): ${err.message}`)
     }
-
-
 
     return (
         <div className={`h-14 md:h-20 items-center w-screen flex justify-evenly md:justify-center py-2 border-b-4 border-t-4 border-coral border-opacity-10 border-dotted gap-x-2 lg:gap-x-6 box-border ${location ? 'flex-row-reverse' : 'flex-row'}`}>

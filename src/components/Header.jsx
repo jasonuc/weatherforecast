@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 
-function Header() {
+function Header({ headerText, setHeaderText }) {
 
-  const [headerText, setHeaderText] = useState("Weatheroooo")
-  
   useEffect(() => {
     const intervalId = setInterval( 
       () => {
