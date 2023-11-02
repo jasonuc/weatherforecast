@@ -5,7 +5,7 @@ const unsplashApiKey = import.meta.env.VITE_VERCEL_UNSPLASH_API_KEY;
 import { useState, useEffect } from "react";
 
 function SearchBar({ location, setLocation, weather, setWeather, setImgSrc }) {
-    const placeholderValues = ["Lagos, Nigeria", "New York, USA", "Tokyo, Japan", "London, UK", "Paris, France", "Beijing, China", "Sydney, Australia", "Rio de Janeiro, Brazil", "Moscow, Russia", "Cairo, Egypt", "Mumbai, India"]
+    const placeholderValues = ["Lagos", "New York", "Tokyo", "London", "Paris", "Beijing", "Sydney", "Rio de Janeiro", "Moscow", "Cairo", "Mumbai"]
     const randomPlaceholder = () => placeholderValues[Math.floor(Math.random() * placeholderValues.length)];
     const [placeholder, setPlaceholder] = useState(randomPlaceholder());
 
